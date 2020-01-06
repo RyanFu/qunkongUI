@@ -1,26 +1,38 @@
 <template>
     <div style="width: 200px">
             <Button size="small">{{connectText}}</Button>
+            <Button size="small" @click="rest">刷新</Button>
         <div>
-            <e_Switch v-for="i in devicesList" :key="i.adbId" v-model="i.status" :active-text="i.adbId"  @change="selectDevice(i.adbId,i.status)"></e_Switch>
-
+            <Row v-for="i in $store.state.AllDevice" :key="i.adbId" >
+                <e_Switch v-model="i.status"  @change="selectDevice(i,i.status)"></e_Switch>
+                <Button @click="goTodevice(i)" v-if="i.name!=null"> {{i.name}}</Button>
+                <Button @click="goTodevice(i)" v-else> {{i.adbId}}</Button>
+            </Row>
         </div>
+        <Dialog :visible.sync="showDevice">
+            <deviceFrom :device="deviceInfo">
+            </deviceFrom>
+        </Dialog>
     </div>
 </template>
 
 <script>
-    import {MenuItem,Menu,MenuItemGroup,Submenu,Alert,Button,Drawer,Table,TableColumn,RadioGroup,RadioButton,Switch} from "element-ui"
+    import Vue from "vue"
+    import deviceFrom  from "@/components/deviceFrom";
+    import {MenuItem,Menu,MenuItemGroup,Submenu,Alert,Button,Drawer,Table,TableColumn,RadioGroup,RadioButton,Switch,Row,Col,Dialog} from "element-ui"
     export default {
         name: "Devices",
         components:{
-            MenuItem,Menu,MenuItemGroup,Submenu,Alert,Button,Drawer,Table,TableColumn,RadioGroup,RadioButton,e_Switch:Switch
+            MenuItem,Menu,MenuItemGroup,Submenu,Alert,Button,Drawer,Table,TableColumn,RadioGroup,RadioButton,e_Switch:Switch,Col,Row,Dialog,deviceFrom
         },
         data(){
             return{
                 isShow:false,
                 connectText:"连接",
                 devicesList:[],
-                isCollapse:false
+                deviceInfo:{},
+                isCollapse:false,
+                showDevice:false,
             }
         },
 
@@ -33,28 +45,8 @@
                 let data=JSON.parse(event.data)
                 switch (data.type) {
                     case "devices":
-
-                        switch (data.action) {
-                            case "ADD":
-                                th.devicesList.push(data.device)
-                                break;
-                            case "REMOVE":
-                                    th.remove(data.device)
-                                break;
-                        }
-                    case "devicesList":
-                        for(let d in data.list){
-                            th.devicesList.push(data.list[d])
-                        }
-                        break;
-                    case "device":
-                        for (let d in th.devicesList){
-                           if(th.devicesList[d].id == data.device.id){
-                               console.log(d)
-                               th.$set(th.devicesList,d,data.device)
-                           }
-                        }
-                        break;
+                        this.$store.commit("setAllDevice",data.device)
+                        break
                 }
             }
         },
@@ -71,23 +63,23 @@
                 })
 
             },
-            getDevices(){
-                let cmd={
-                    type:"getDevices"
-                }
-                this.devicesList=[]
-                this.ws.send(JSON.stringify(cmd))
+            goTodevice(device){
+                this.showDevice=true
+                this.deviceInfo=device
+ 
             },
-
-
-
-            selectDevice(id,s){
+            rest(){
                 let cmd={
-                    type:"selectDevice",
-                    status:s,
-                    adbId:id
+                    type:"restDevices",
                 }
-               this.$socket.ws.send(JSON.stringify(cmd))
+                this.$socket.ws.send(JSON.stringify(cmd))
+            },
+            selectDevice(device,status){
+                if(status){
+                    this.$store.commit("addSelectDevice",device)
+                }else{
+                    this.$store.commit("reSelectDevice",device)
+                }
             }
         },
 

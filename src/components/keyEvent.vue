@@ -3,11 +3,6 @@
         <Tabs>
             <TabPane label="按键">
                 <Row>
-                    <Input class="item"  v-model="textValue" style="width: 200px;">
-                        <Button slot="append" @click="text(textValue)">输入</Button>
-                    </Input>
-                </Row>
-                <Row>
                     <Button class="item" v-for="cmd in cmdAll" @click="cmdAction(cmd.cmd)">{{cmd.name}}</Button>
                 </Row>
             </TabPane>
@@ -21,6 +16,22 @@
 
                 <Button class="item" @click="dialogForm=true">添加命令</Button>
                 <Button class="item" @click="installApp=true">安装应用</Button>
+                <Row>
+                    <Select v-model="pushMethod">
+                        <Option  value="random" lable="随机各一份"></Option>
+                        <Option value="order"  label="都一样"></Option>
+                        <Option value="together"  label="顺序"></Option>
+                    </Select>
+                    <Input class="item" v-model="files" ></Input>
+                    <Button  @click="selectFiles">复制到手机</Button>
+                </Row>
+            </TabPane>
+            <TabPane label="输入">
+                <Row>
+                    <Input class="item"  v-model="textValue" style="width: 200px;">
+                        <Button slot="append" @click="text(textValue)">输入</Button>
+                    </Input>
+                </Row>
             </TabPane>
 
         </Tabs>
@@ -69,6 +80,7 @@
         },
         data(){
             return{
+                files:"",
                 dialogForm:false,
                 installApp:false,
                 textValue:"",
@@ -78,6 +90,7 @@
                 app:{
                     path:""
                 },
+                pushMethod:'random',
                 appList:[],
                 cmdAll:[],
                 cmd:{
@@ -107,12 +120,22 @@
             cmdAction(str){
                 let c={
                     type:"runCmd",
+                    devices:this.$store.state.SelectDevice,
                     cmd:str
                 }
                 this.$socket.ws.send(JSON.stringify(c))
             },
             text(str){
                 this.cmdAction("shell input text "+str)
+            },
+            selectFiles(){
+                let c={
+                    type:"push",
+                    data:this.files,
+                    method:this.pushMethod,
+                    Rpath:"/sdcard/DCIM/Camera"
+                }
+                this.$socket.ws.send(JSON.stringify(c))
             }
         },
         mounted(){
@@ -126,11 +149,10 @@
 
                 }
             },
-                axios.get("http://127.0.0.1:9991/app/all").then(item=>{
+                axios.get("/app/all").then(item=>{
                         item.data.map(it=>{
                             this.appList.push(it)
                         })
-                    console.log(this.appList)
                 })
 
 

@@ -10,7 +10,7 @@
                     <Button>添加任务计划</Button>
                 </Header>
                 <Main style="min-height: 40%">
-                    <Table></Table>
+
                 </Main>
 
                 <KeyEvent>
@@ -23,12 +23,13 @@
 </template>
 <script>
     import KeyEvent from "./components/keyEvent"
+    import deviceFrom from "@/components/deviceFrom";
     import Devices from "@/components/Devices";
     import {Row,Col,Menu,MenuItem,Submenu,MenuItemGroup,Header,Container,Aside,Footer,Main,Button,Alert} from "element-ui"
     export default {
         name: 'app',
         components: {
-            Row,Col,Menu,MenuItem,Submenu,MenuItemGroup,Header,Container,Aside,Footer,Main,KeyEvent,Button,Devices,Alert
+            Row,Col,Menu,MenuItem,Submenu,MenuItemGroup,Header,Container,Aside,Footer,Main,KeyEvent,Button,Devices,Alert,deviceFrom
         },
         mounted(){
                 this.$socket.int()

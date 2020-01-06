@@ -3,7 +3,7 @@ import App from './App.vue'
 import store from "./store.vue"
 import 'element-ui/lib/theme-chalk/index.css';
 import axios from "axios"
-axios.defaults.baseURL="127.0.0.1:9991"
+axios.defaults.baseURL="http://127.0.0.1:9991"
 
 Vue.config.productionTip = false
 
@@ -49,3 +49,4 @@ new Vue({
   store,
   render: h => h(App),
 }).$mount('#app')
+

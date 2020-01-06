@@ -6,24 +6,32 @@
 
     export default new Vuex.Store({
         state:{
-            ws:WebSocket,
-
+            SelectDevice:[],
+            AllDevice:[],
+            InfoDevice:[],
         },
         mutations:{
-            setWs(state,socket){
-                state.ws=socket
-            }
+            addSelectDevice(state,data){
+                state.SelectDevice.push(data)
+            },
+            reSelectDevice(state,data){
+                let index = state.SelectDevice.findIndex(item => {
+                    if (item.id == data.id) {
+                        return true;
+                    }
+                })
+                state.SelectDevice.splice(index,1)
 
+            },
+            setAllDevice(sate,data){
+                sate.AllDevice=data
+            }
         },
         actions:{
-            conn(context,url) {
-                try {
-                    let ws= new WebSocket(url);
-                    context.commit("setWs",ws)
-                } catch (e) {
-                    console.log("错误")
-                }
-            },
+
         },
+        getters:{
+
+        }
     })
 </script>
