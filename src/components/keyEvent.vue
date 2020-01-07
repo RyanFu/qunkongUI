@@ -31,7 +31,22 @@
                     <Input class="item"  v-model="textValue" style="width: 200px;">
                         <Button slot="append" @click="text(textValue)">输入</Button>
                     </Input>
+
                 </Row>
+                <Row>
+                    <Button @click="tel()">输入手机号</Button>
+                </Row>
+                <Row>
+                    <Input class="item" v-model="inputCmd"></Input>
+                    <Button @click="cmdAction(inputCmd)">命令</Button>
+                </Row>
+            </TabPane>
+            <TabPane label="设置">
+                <Row>
+                     <Button slot="append" @click="text(textValue)">输入</Button>
+
+                </Row>
+
             </TabPane>
 
         </Tabs>
@@ -80,6 +95,7 @@
         },
         data(){
             return{
+                inputCmd:"",
                 files:"",
                 dialogForm:false,
                 installApp:false,
@@ -110,12 +126,8 @@
                 this.$socket.ws.send(JSON.stringify(c))
             },
             addApp(){
-                this.installApp=false
-                let c={
-                    type:"installApp",
-                    cmd:"install "+ this.app.path
-                }
-                this.$socket.ws.send(JSON.stringify(c))
+
+                this.cmdAction("install "+ this.app.path)
             },
             cmdAction(str){
                 let c={
@@ -127,6 +139,13 @@
             },
             text(str){
                 this.cmdAction("shell input text "+str)
+            },
+            tel(){
+                let c={
+                    type:"inputTel",
+                    devices: this.$store.state.SelectDevice,
+                }
+                this.$socket.ws.send(JSON.stringify(c))
             },
             selectFiles(){
                 let c={

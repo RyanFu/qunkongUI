@@ -24,6 +24,11 @@
 
             },
             setAllDevice(sate,data){
+                sate.SelectDevice=[]
+                data.map(item=>{
+                    item.status=true
+                    this.commit("addSelectDevice",item)
+                })
                 sate.AllDevice=data
             }
         },

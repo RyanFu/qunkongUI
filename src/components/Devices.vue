@@ -45,7 +45,9 @@
                 let data=JSON.parse(event.data)
                 switch (data.type) {
                     case "devices":
+
                         this.$store.commit("setAllDevice",data.device)
+
                         break
                 }
             }

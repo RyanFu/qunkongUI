@@ -7,6 +7,9 @@
             <Input v-model="device.name"></Input>
         </FormItem>
         <FormItem label="手机号">
+            <Row v-for="i in device.tel">
+                {{i.context}}
+            </Row>
             <Select v-model="selectTel">
                 <Option v-for="tel in notBindTel" :value="tel.id" :key="tel.id" :label="tel.context"></Option>
             </Select>
@@ -20,11 +23,11 @@
 
 <script>
     import axios from "axios"
-    import {FormItem ,Form,Button,Input,Select,Option} from "element-ui"
+    import {FormItem ,Form,Button,Input,Select,Option,Row} from "element-ui"
     export default {
         name: "deviceFrom",
         components:{
-            FormItem ,Form,Button,Input,Select,Option
+            FormItem ,Form,Button,Input,Select,Option,Row
         },
         props:{
             device:{
