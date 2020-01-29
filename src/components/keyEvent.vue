@@ -3,74 +3,62 @@
         <Tabs>
             <TabPane label="按键">
                 <Row>
-                    <Button class="item" v-for="cmd in cmdAll" @click="cmdAction(cmd.cmd)">{{cmd.name}}</Button>
+                    <Button class="item" v-for="code in keyCode" @click="adbAction('input keyevent '+code.value)">{{code.name}}</Button>
                 </Row>
             </TabPane>
             <TabPane label="app应用">
-                <Popover  v-for="item in appList" trigger="hover">
-                    <Button class="item" slot="reference"  @click="cmdAction( 'shell monkey -p '+item.packageName+' 1') ">{{item.name}}</Button>
-                </Popover>
+                    <Button  v-for="item in appList" class="item"   @click="adbAction( ' monkey -p '+item.packageName+' 1','shell') ">{{item.name}}</Button>
+                    <Button class="item" @click="installApp=true">安装应用</Button>
 
-            </TabPane>
-            <TabPane label="菜单栏">
-
-                <Button class="item" @click="dialogForm=true">添加命令</Button>
-                <Button class="item" @click="installApp=true">安装应用</Button>
-                <Row>
-                    <Select v-model="pushMethod">
-                        <Option  value="random" lable="随机各一份"></Option>
-                        <Option value="order"  label="都一样"></Option>
-                        <Option value="together"  label="顺序"></Option>
-                    </Select>
-                    <Input class="item" v-model="files" ></Input>
-                    <Button  @click="selectFiles">复制到手机</Button>
-                </Row>
             </TabPane>
             <TabPane label="输入">
                 <Row>
-                    <Input class="item"  v-model="textValue" style="width: 200px;">
-                        <Button slot="append" @click="text(textValue)">输入</Button>
-                    </Input>
+                    <Col :span="12">
+                        <Input v-model="textValue"  style="width: 200px;">
+                            <Button slot="append" @click="adbAction('input text '+ textValue)">输入</Button>
+                        </Input>
+                    </Col>
+                    <Col :span="12">
+                        <Button @click="adbAction( '','tel')"> 输入手机号</Button>
+
+                    </Col>
 
                 </Row>
+
                 <Row>
-                    <Button @click="tel()">输入手机号</Button>
-                </Row>
-                <Row>
-                    <Input class="item" v-model="inputCmd"></Input>
-                    <Button @click="cmdAction(inputCmd)">命令</Button>
+                    <Col :span="5">
+                        <Select v-model="pushMethod">
+                            <Option  value="random" label="随机各一份"></Option>
+                            <Option value="order"  label="顺序"></Option>
+                            <Option value="together"  label=" 都一样"></Option>
+                        </Select>
+                    </Col>
+                    <Col :span="10">
+                        <Input class="item" v-model="files" placeholder="电脑路径(多路径空格隔开)"></Input>
+                    </Col>
+                    <Col :span="5">
+                        <Select v-model="Rpath">
+                            <Option  value="/sdcard/Pictures/" label="相册"></Option>
+                            <Option value="order"  label="视频"></Option>
+                        </Select>
+                    </Col>
+                    <Col :span="4">
+                        <Button  @click="selectFiles">复制到手机</Button>
+                    </Col>
+
                 </Row>
             </TabPane>
             <TabPane label="设置">
                 <Row>
-                     <Button slot="append" @click="text(textValue)">输入</Button>
-
+                     <Button @click="adbAction('svc wifi enable')">开启wifi </Button>
+                     <Button @click="adbAction('svc wifi disable')">关闭wifi </Button>
+                     <Button @click="adbAction('svc data enable')">开启流量 </Button>
+                     <Button @click="adbAction('svc data disable')">关闭流量 </Button>
                 </Row>
-
             </TabPane>
-
         </Tabs>
 <!--        添加命令-->
-        <Dialog title="自定义" :visible.sync="dialogForm">
-            <Form :model="cmd">
-                <FormItem >
-                    <Input v-model="cmd.name" placeholder="命令名称"></Input>
-                </FormItem>
-                <FormItem>
-                    <Input v-model="cmd.doc" placeholder="命令介绍"></Input>
 
-                </FormItem>
-                <FormItem>
-                    <Input v-model="cmd.cmd" placeholder="命令内容"></Input>
-
-                </FormItem>
-                <FormItem>
-                    <Button @click="addCmd">提交</Button>
-
-                </FormItem>
-            </Form>
-
-        </Dialog>
         <Dialog title="安装应用" :visible.sync="installApp">
             <Form :model="app">
                 <FormItem >
@@ -106,72 +94,60 @@
                 app:{
                     path:""
                 },
-                pushMethod:'random',
+                Rpath:"/sdcard/Pictures/",
+                pushMethod:'together',
                 appList:[],
-                cmdAll:[],
-                cmd:{
-                    name:"",
-                    cmd:"",
-                    doc:""
-                }
+                keyCode:[],
+
             }
         },
         methods:{
-            addCmd(){
+            key(e){
                 let c={
-                    type:"addCmd",
-                    data:this.cmd
-
+                    Backspace:112,
+                    b:30
                 }
-                this.$socket.ws.send(JSON.stringify(c))
+                this.adbAction("input keyevent "+c[e.key])
+                console.log(e)
             },
             addApp(){
+                this.installApp=false
+                this.adbAction(" -r "+this.app.path,"install")
+            },
 
-                this.cmdAction("install "+ this.app.path)
-            },
-            cmdAction(str){
-                let c={
-                    type:"runCmd",
-                    devices:this.$store.state.SelectDevice,
-                    cmd:str
+
+            adbAction(cmd,type="shell",other=""){
+                let d={
+                    cmd,
+                    type,
+                    other,
                 }
-                this.$socket.ws.send(JSON.stringify(c))
-            },
-            text(str){
-                this.cmdAction("shell input text "+str)
-            },
-            tel(){
-                let c={
-                    type:"inputTel",
-                    devices: this.$store.state.SelectDevice,
-                }
-                this.$socket.ws.send(JSON.stringify(c))
+                this.$store.dispatch("adbAction",d)
             },
             selectFiles(){
                 let c={
                     type:"push",
-                    data:this.files,
-                    method:this.pushMethod,
-                    Rpath:"/sdcard/DCIM/Camera"
+                    cmd:"",
+                    other:{
+                        Rpath:this.Rpath,
+                        Lpath:this.files,
+                        pushMethod:this.pushMethod
+
+                    }
                 }
-                this.$socket.ws.send(JSON.stringify(c))
-            }
+              this.$store.dispatch("adbAction",c)
+            },
         },
         mounted(){
-            this.$socket.message["cmd"]=(e)=>{
-                let d=JSON.parse(e.data);
-                switch (d.type) {
-                        case "cmd":
-
-                            this.cmdAll=d.data
-                        break
-
-                }
-            },
                 axios.get("/app/all").then(item=>{
                         item.data.map(it=>{
                             this.appList.push(it)
                         })
+                })
+                axios.get("/adb/keyCode").then(item=>{
+                    item.data.map(i=>{
+                        this.keyCode.push(i)
+                    })
                 })
 
 
@@ -180,7 +156,5 @@
 </script>
 
 <style scoped>
-    .item{
-        margin:10px;
-    }
+
 </style>
