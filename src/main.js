@@ -3,8 +3,8 @@ import App from './App.vue'
 import store from "./store.vue"
 import 'element-ui/lib/theme-chalk/index.css';
 import axios from "axios"
-// let host="192.168.1.8"
-let host="localhost"
+let host="192.168.1.8"
+// let host="localhost"
 axios.defaults.baseURL="http://"+host+":9991"
 Vue.config.productionTip = false
 Vue.prototype.$socket= {

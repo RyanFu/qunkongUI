@@ -60,7 +60,6 @@
                     type:data.type,
                     other:data.other
                 }
-console.log(c)
                 axios.post("/devices/runAdb",c)
             },
         },

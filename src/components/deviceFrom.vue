@@ -4,7 +4,8 @@
             <span>{{device.adbId}}</span>
         </FormItem>
         <FormItem label="手机花名">
-            <Input v-model="device.name"></Input>
+
+            <Input v-model="device.edevice.name"></Input>
         </FormItem>
         <FormItem label="手机号">
             <Row v-for="i in device.tel">
@@ -31,7 +32,9 @@
         },
         props:{
             device:{
-                tel:[]
+                edevice:{
+                    name:""
+                }
             }
         },
         data(){
@@ -41,15 +44,24 @@
                 notBindTel:[]
             }
         },
+        beforeMount(){
+            let vm=this
+            if(vm.device.edevice instanceof Object ==false){
+                vm.device.edevice={
+                    name:"",
+                    adbId:vm.device.adbId
+                }
+            }
+        },
         methods:{
             save(){
-                axios.post("/device/update",this.device).then(item=>{
+                axios.post("/device/update",this.device.edevice).then(item=>{
                     console.log(item.data)
                 })
             },
             bindTel(){
                 let d={
-                    device_id:this.device.id,
+                    device_id:this.device.edevice.id,
                     tel_id:this.selectTel
                 }
                 axios.post("/device/bindTel",d).then(item=>{

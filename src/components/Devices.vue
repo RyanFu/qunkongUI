@@ -14,20 +14,25 @@
                     <p style="font-size: 10px;overflow: hidden" v-for="m in i.msg">{{m}}</p>
                 </div>
                 <div>
-                    <Checkbox :label="i.adbId"></Checkbox>
+                    <Checkbox :label="k"></Checkbox>
 <!--                    <Button @click="goTodevice(i)" v-if="i.name!=null" style="font-size: 12px">-->
 <!--                        {{i.name}}-->
 <!--                        <span v-for="t in i.tel" style="font-size: 12px">-->
 <!--                        {{t.context}}-->
 <!--                        </span>-->
 <!--                    </Button>-->
-<!--                    <Button @click="goTodevice(i)" v-else> {{i.adbId}}</Button>-->
-                    <span v-if="i.channel == null ">
-                            <span v-if="i.channel.active">
-                                连接中
-                            </span>
-                    </span>
-                    <Button @click="connectDevice(i.adbId)" >连接app</Button>
+                    <Button @click="goTodevice(i)" size="mini">
+
+                                <span>
+                                    {{k}}
+                                </span>
+                    </Button>
+<!--                    <span v-if="i.channel == null ">-->
+<!--                            <span v-if="i.channel.active">-->
+<!--                                连接中-->
+<!--                            </span>-->
+<!--                    </span>-->
+                    <Button @click="connectDevice(i.adbId)" size="mini">连接app</Button>
                 </div>
             </div>
             </CheckboxGroup>

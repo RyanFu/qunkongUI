@@ -3,6 +3,34 @@
         <Tabs>
             <TabPane label="按键">
                 <Row>
+                    <Col :span="7">
+                        <Input v-model="textValue"  type="text" style="width: 400px;"
+                               @keyup.enter.native="adbAction('am broadcast -a ADB_INPUT_TEXT --es msg  '+ textValue),textValue=''"
+                               @keyup.delete.native="adbAction('input keyevent 67')"
+                               @keyup.down.native="adbAction('input keyevent 20')"
+                               @keyup.up.native="adbAction('input keyevent 19')"
+                               @keyup.left.native="adbAction('input keyevent 21')"
+                               @keyup.right.native="adbAction('input keyevent 22')"
+                        >
+
+                        </Input>
+
+                    </Col>
+                    <Button   @click="adbAction('am broadcast -a ADB_INPUT_CHARS --eia chars 💫') ">表情</Button>
+                    <Col :span="2">
+                        <Button   @click="adbAction('am broadcast -a ADB_INPUT_TEXT --es msg  '+ textValue)">输入</Button>
+                    </Col>
+                    <Col :span="2">
+                        <Button   @click="adbAction(textValue)">shell命令</Button>
+                    </Col>
+
+
+
+                    <Col :span="4">
+                        <Button @click="adbAction( '','tel')" type="danger"> 输入手机号</Button>
+                    </Col>
+                </Row>
+                <Row>
                     <Button class="item" v-for="code in keyCode" @click="adbAction('input keyevent '+code.value)">{{code.name}}</Button>
                 </Row>
             </TabPane>
@@ -11,20 +39,16 @@
                     <Button class="item" @click="installApp=true">安装应用</Button>
 
             </TabPane>
-            <TabPane label="输入">
+
+            <TabPane label="设置">
                 <Row>
-                    <Col :span="12">
-                        <Input v-model="textValue"  style="width: 200px;">
-                            <Button slot="append" @click="adbAction('input text '+ textValue)">输入</Button>
-                        </Input>
-                    </Col>
-                    <Col :span="12">
-                        <Button @click="adbAction( '','tel')"> 输入手机号</Button>
-
-                    </Col>
-
+                     <Button @click="adbAction('svc wifi enable')">开启wifi </Button>
+                     <Button @click="adbAction('svc wifi disable')">关闭wifi </Button>
+                     <Button @click="adbAction('svc data enable')">开启流量 </Button>
+                     <Button @click="adbAction('svc data disable')">关闭流量 </Button>
                 </Row>
-
+            </TabPane>
+            <TabPane label="文件">
                 <Row>
                     <Col :span="5">
                         <Select v-model="pushMethod">
@@ -37,9 +61,8 @@
                         <Input class="item" v-model="files" placeholder="电脑路径(多路径空格隔开)"></Input>
                     </Col>
                     <Col :span="5">
-                        <Select v-model="Rpath">
-                            <Option  value="/sdcard/Pictures/" label="相册"></Option>
-                            <Option value="order"  label="视频"></Option>
+                        <Select v-model="sRpath">
+                            <Option v-for="(r,k) in Rpath"  :value="r" :label="k"></Option>
                         </Select>
                     </Col>
                     <Col :span="4">
@@ -47,13 +70,21 @@
                     </Col>
 
                 </Row>
-            </TabPane>
-            <TabPane label="设置">
                 <Row>
-                     <Button @click="adbAction('svc wifi enable')">开启wifi </Button>
-                     <Button @click="adbAction('svc wifi disable')">关闭wifi </Button>
-                     <Button @click="adbAction('svc data enable')">开启流量 </Button>
-                     <Button @click="adbAction('svc data disable')">关闭流量 </Button>
+                    <Col :span="5">
+                        <Select v-model="sRpath">
+                            <Option v-for="(r,k) in Rpath"  :value="r" :label="k"></Option>
+                        </Select>
+                    </Col>
+                    <Col :span="4">
+                        <Button  @click="createDIR">创建</Button>
+                    </Col>
+                    <Col :span="4">
+                        <Button  @click="restDIR">刷新</Button>
+                    </Col>
+                    <Col :span="4">
+                        <Button  @click="deleteFile">删除</Button>
+                    </Col>
                 </Row>
             </TabPane>
         </Tabs>
@@ -75,11 +106,11 @@
 
 <script>
     import axios from "axios"
-    import {Collapse,CollapseItem,Button,Input,Row,Col,Dialog,Form,FormItem,Select,Option,Switch,Tabs,TabPane,Popover} from "element-ui"
+    import {Collapse,CollapseItem,Button,Input,Row,Col,Dialog,Form,FormItem,Select,Option,Switch,Tabs,TabPane,Popover,ButtonGroup} from "element-ui"
     export default {
         name: "keyEvent",
         components:{
-            Collapse,CollapseItem,Button,Input,Row,Col,Dialog,Form,FormItem,Select,Option,e_Switch:Switch,Tabs,TabPane,Popover
+            Collapse,CollapseItem,Button,ButtonGroup,Input,Row,Col,Dialog,Form,FormItem,Select,Option,e_Switch:Switch,Tabs,TabPane,Popover
         },
         data(){
             return{
@@ -94,7 +125,11 @@
                 app:{
                     path:""
                 },
-                Rpath:"/sdcard/Pictures/",
+                sRpath:"",
+                Rpath:{
+                    "图片":"/sdcard/Pictures/",
+                    "相册":"/sdcard/DCIM/Camera/"
+                },
                 pushMethod:'together',
                 appList:[],
                 keyCode:[],
@@ -129,7 +164,7 @@
                     type:"push",
                     cmd:"",
                     other:{
-                        Rpath:this.Rpath,
+                        Rpath:this.sRpath,
                         Lpath:this.files,
                         pushMethod:this.pushMethod
 
@@ -137,6 +172,28 @@
                 }
               this.$store.dispatch("adbAction",c)
             },
+            deleteFile(){
+                let c={
+                    type:"shell",
+                    cmd:" rm -rf "+this.sRpath +"*",
+                }
+                this.$store.dispatch("adbAction",c)
+            },
+            createDIR(){
+                let c={
+                    type:"shell",
+                    cmd:" mkdir "+this.sRpath,
+                }
+                this.$store.dispatch("adbAction",c)
+            },
+            restDIR(){
+                let c={
+                    type:"shell",
+
+                    cmd:" broadcast -a android.intent.action.MEDIA_MOUNTED -d "+this.sRpath,
+                }
+                this.$store.dispatch("adbAction",c)
+            }
         },
         mounted(){
                 axios.get("/app/all").then(item=>{
