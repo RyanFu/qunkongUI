@@ -9,9 +9,14 @@
             SelectDevice:[],
             AllDevice:{},
             follow:true,
-            DoDevice:""
+            DoingDevice:"",
+            TaskAction:[],
+            isCreateTask:false
         },
         mutations:{
+            changeFollow(state,bool){
+                state.follow=bool
+            },
             addRunMsg(state,data){
                 for(let i in state.AllDevice){
                     if(i==data.adbId){
@@ -19,6 +24,9 @@
                         state.AllDevice[i].msg.unshift(data.msg)
                     }
                 }
+            },
+            createTask(state,bool){
+                state.isCreateTask=bool
             },
             setAllDevice(sate,data){
                 sate.SelectDevice=[]
@@ -29,7 +37,7 @@
                     item.msg=[]
                     if(item.size!=""){
                         let w=item.size.split("x",3)
-                        item.style={width:w[0] /3 +'px',height:w[1] /3  +'px',border:"1px solid #409EFF",display:"inline-block",margin:"0 0 5px 5px"}
+                        item.style={width:w[0] /4 +'px',height:w[1] /4  +'px',border:"1px solid #409EFF",display:"inline-block",margin:"0 0 5px 5px"}
                     }
                     sate.SelectDevice.push(item.adbId)
                     sate.AllDevice[item.adbId]=item
@@ -39,13 +47,15 @@
         },
         actions:{
             adbAction({dispatch,state},data){
-
+                if(state.isCreateTask){
+                    state.TaskAction.push(data)
+                }
                 let d=[]
                 if(state.follow){
                     d=state.SelectDevice
 
                 }else{
-                    d=[state.DoDevice]
+                    d=[state.DoingDevice]
 
                 }
                 if(d.length<1){

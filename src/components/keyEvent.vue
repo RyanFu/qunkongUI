@@ -16,7 +16,7 @@
                         </Input>
 
                     </Col>
-                    <Button   @click="adbAction('am broadcast -a ADB_INPUT_CHARS --eia chars 💫') ">表情</Button>
+                    <Button   @click="adbAction('am broadcast -a ADB_INPUT_CHARS --eia chars ') ">表情</Button>
                     <Col :span="2">
                         <Button   @click="adbAction('am broadcast -a ADB_INPUT_TEXT --es msg  '+ textValue)">输入</Button>
                     </Col>

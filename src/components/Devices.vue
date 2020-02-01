@@ -1,12 +1,11 @@
 <template>
     <div>
         <div sytle="display:flex">
-            <Button>全选</Button>
+
             <CheckboxGroup v-model="$store.state.SelectDevice">
             <div v-for="(i,k) in $store.state.AllDevice" :key="i.adbId"  style="display: inline-block">
                 <div   :style="i.style" style="position: relative;overflow: hidden" >
                     <div style="position: absolute;width: 100%;height: 100%;z-index: 999" :title="i.adbId"  @mousedown="mouseStart" @mouseup="mouseEnd" >
-
                         <div  id="video"></div>
 
                     </div>
@@ -24,7 +23,7 @@
                     <Button @click="goTodevice(i)" size="mini">
 
                                 <span>
-                                    {{k}}
+                                   信息
                                 </span>
                     </Button>
 <!--                    <span v-if="i.channel == null ">-->
@@ -119,7 +118,7 @@
                 axios.get("/device/device/connectDevice?adbId="+abdId,)
             },
             mouseStart(e){
-                this.$store.state.DoDevice=e.target.title
+                this.$store.state.DoingDevice=e.target.title
 
                 this.xyStart={
                     x:e.offsetX,
@@ -132,9 +131,9 @@
                 let endY=e.offsetY
                 let cmd="";
                 if(  Math.abs( (endX - this.xyStart.x) )   > 3 ||  Math.abs( (endY- this.xyStart.Y) )>3  ){
-                    cmd="input swipe " +this.xyStart.x * 3 +" "+this.xyStart.y * 3 + " " +e.offsetX * 3 + " "+e.offsetY * 3 +"   " + ((new Date()).getTime() - this.xyStart.t )
+                    cmd="input swipe " +this.xyStart.x * 4 +" "+this.xyStart.y * 4 + " " +e.offsetX * 4 + " "+e.offsetY * 4 +"   " + ((new Date()).getTime() - this.xyStart.t )
                 }else{
-                     cmd="input tap " +e.offsetX * 3 + " "+e.offsetY * 3
+                     cmd="input tap " +e.offsetX * 4 + " "+e.offsetY * 4
                 }
 
                 let c={
