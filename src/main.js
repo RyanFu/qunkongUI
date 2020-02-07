@@ -3,10 +3,10 @@ import App from './App.vue'
 import store from "./store.vue"
 import 'element-ui/lib/theme-chalk/index.css';
 import axios from "axios"
-let host="192.168.1.8"
-// let host="localhost"
-axios.defaults.baseURL="http://"+host+":9991"
+axios.defaults.baseURL="http://"+process.env.VUE_APP_APIURL+":9991"
+Vue.prototype.$uploadUrl="http://"+process.env.VUE_APP_APIURL+":9991/file/upload"
 Vue.config.productionTip = false
+Vue.prototype.$axios=axios
 Vue.prototype.$socket= {
     ws:WebSocket,
     open:{
@@ -17,7 +17,7 @@ Vue.prototype.$socket= {
     close:{},
     int:function () {
       if(this.ws.readyState!=1){
-        this.ws=new WebSocket("ws://"+host+":9999/ws")
+        this.ws=new WebSocket("ws://"+process.env.VUE_APP_APIURL+":9999/ws")
       }
       this.ws.onopen= (e)=>{
           for (let  i in this.open){

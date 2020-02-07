@@ -11,7 +11,9 @@
             follow:true,
             DoingDevice:"",
             TaskAction:[],
-            isCreateTask:false
+            isCreateTask:false,
+            SelectFile:[]
+
         },
         mutations:{
             changeFollow(state,bool){

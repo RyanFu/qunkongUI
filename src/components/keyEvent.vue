@@ -16,9 +16,8 @@
                         </Input>
 
                     </Col>
-                    <Button   @click="adbAction('am broadcast -a ADB_INPUT_CHARS --eia chars ') ">表情</Button>
                     <Col :span="2">
-                        <Button   @click="adbAction('am broadcast -a ADB_INPUT_TEXT --es msg  '+ textValue)">输入</Button>
+                        <Button   @click="adbAction( textValue,'text')">输入</Button>
                     </Col>
                     <Col :span="2">
                         <Button   @click="adbAction(textValue)">shell命令</Button>
@@ -28,15 +27,17 @@
 
                     <Col :span="4">
                         <Button @click="adbAction( '','tel')" type="danger"> 输入手机号</Button>
+                        <Button   @click="adbAction('','name') ">名字</Button>
+
                     </Col>
+
                 </Row>
                 <Row>
-                    <Button class="item" v-for="code in keyCode" @click="adbAction('input keyevent '+code.value)">{{code.name}}</Button>
+                    <Button class="item" v-for="(code,k) in keyCode" @click="adbAction(code,'key')">{{k}}</Button>
                 </Row>
             </TabPane>
             <TabPane label="app应用">
-                    <Button  v-for="item in appList" class="item"   @click="adbAction( ' monkey -p '+item.packageName+' 1','shell') ">{{item.name}}</Button>
-                    <Button class="item" @click="installApp=true">安装应用</Button>
+                    <Button  v-for="(item,k) in appList" class="item"   @click="adbAction( ' monkey -p '+item+' 1','shell') ">{{k}}</Button>
 
             </TabPane>
 
@@ -57,9 +58,6 @@
                             <Option value="together"  label=" 都一样"></Option>
                         </Select>
                     </Col>
-                    <Col :span="10">
-                        <Input class="item" v-model="files" placeholder="电脑路径(多路径空格隔开)"></Input>
-                    </Col>
                     <Col :span="5">
                         <Select v-model="sRpath">
                             <Option v-for="(r,k) in Rpath"  :value="r" :label="k"></Option>
@@ -68,6 +66,7 @@
                     <Col :span="4">
                         <Button  @click="selectFiles">复制到手机</Button>
                     </Col>
+                    <Button class="item" @click="addApp">安装应用</Button>
 
                 </Row>
                 <Row>
@@ -88,23 +87,14 @@
                 </Row>
             </TabPane>
         </Tabs>
-<!--        添加命令-->
 
-        <Dialog title="安装应用" :visible.sync="installApp">
-            <Form :model="app">
-                <FormItem >
-                    <Input v-model="app.path" placeholder="全路径"></Input>
-                </FormItem>
-                <FormItem>
-                    <Button @click="addApp">提交</Button>
-                </FormItem>
-            </Form>
-        </Dialog>
     </div>
 
 </template>
 
 <script>
+    import keyCode  from "@/assets/keyCode"
+    import appList  from "@/assets/app"
     import axios from "axios"
     import {Collapse,CollapseItem,Button,Input,Row,Col,Dialog,Form,FormItem,Select,Option,Switch,Tabs,TabPane,Popover,ButtonGroup} from "element-ui"
     export default {
@@ -115,24 +105,20 @@
         data(){
             return{
                 inputCmd:"",
-                files:"",
                 dialogForm:false,
-                installApp:false,
                 textValue:"",
                 show:[
                     "1"
                 ],
-                app:{
-                    path:""
-                },
+
                 sRpath:"",
                 Rpath:{
                     "图片":"/sdcard/Pictures/",
                     "相册":"/sdcard/DCIM/Camera/"
                 },
                 pushMethod:'together',
-                appList:[],
-                keyCode:[],
+                appList:{},
+                keyCode:{},
 
             }
         },
@@ -146,8 +132,13 @@
                 console.log(e)
             },
             addApp(){
-                this.installApp=false
-                this.adbAction(" -r "+this.app.path,"install")
+                this.$store.state.SelectFile.map(item=>{
+                    if(item.type=="file"){
+                        this.adbAction(item.dir+item.md5+"."+item.suffix,"install")
+                    }
+
+                })
+
             },
 
 
@@ -160,12 +151,20 @@
                 this.$store.dispatch("adbAction",d)
             },
             selectFiles(){
+                let files=[]
+                this.$store.state.SelectFile.map(item=>{
+                    if(item.type=="file"){
+
+                        let url=item.dir+item.md5+"."+item.suffix
+                        files.push(url)
+                    }
+                })
                 let c={
                     type:"push",
                     cmd:"",
                     other:{
                         Rpath:this.sRpath,
-                        Lpath:this.files,
+                        Lpath:files,
                         pushMethod:this.pushMethod
 
                     }
@@ -196,22 +195,13 @@
             }
         },
         mounted(){
-                axios.get("/app/all").then(item=>{
-                        item.data.map(it=>{
-                            this.appList.push(it)
-                        })
-                })
-                axios.get("/adb/keyCode").then(item=>{
-                    item.data.map(i=>{
-                        this.keyCode.push(i)
-                    })
-                })
+            this.appList=appList
+            this.keyCode=keyCode
 
 
         }
     }
 </script>
-
 <style scoped>
 
 </style>
