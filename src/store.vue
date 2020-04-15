@@ -10,7 +10,12 @@
             AllDevice:{},
             follow:true,
             DoingDevice:"",
-            TaskAction:[],
+            task:{
+                id:"",
+                title: "",
+                doc:"",
+                tasks:[]
+            },
             isCreateTask:false,
             SelectFile:[]
 
@@ -49,8 +54,17 @@
         },
         actions:{
             adbAction({dispatch,state},data){
+                console.log(data.type)
                 if(state.isCreateTask){
-                    state.TaskAction.push(data)
+                    let ts={
+                        title:"",
+                        context:data.cmd,
+                        action:data.type,
+                        sort:1,
+                        sleep:1,
+                        random:false
+                    }
+                    state.task.tasks.push(ts)
                 }
                 let d=[]
                 if(state.follow){
@@ -61,7 +75,6 @@
 
                 }
                 if(d.length<1){
-                    alert("没有选择设备")
                     return
                 }
 
@@ -69,6 +82,7 @@
 
                     devices:d,
                     cmd:data.cmd,
+                    doing:state.DoingDevice,
                     type:data.type,
                     other:data.other
                 }

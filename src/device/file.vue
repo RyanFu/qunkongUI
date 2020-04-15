@@ -12,19 +12,23 @@
             <div class="custom-tree-node" slot-scope="{ node, data }">
                          <span>{{data.name}}</span>
                 <div v-if="node.data.type=='dir'">
-                      <Input size="mini"  style="width: 200px" v-model="doAddDir[data.id]" ><Button size="mini" slot="append"  type="text" @click="addDir(data.id)">添加目录</Button></Input>
+                      <Input size="mini"  style="width: 200px" v-model="doAddDir[data.id]" >
+                          <Button size="mini" slot="append"  type="text" @click="addDir(data.id)">添加目录</Button>
+                      </Input>
                         <Button size="mini" type="text" @click="showUpload=true,fileData.dirId=data.id">上传文件</Button>
                 </div>
             </div>
             </Tree>
         </div>
         <Dialog :visible.sync="showUpload">
-            <Input><span slot="prepend">标签</span> </Input>
+            <Input>
+                <span slot="prepend">标签</span>
+            </Input>
             <Upload
                     :action=$uploadUrl
                     multiple
                     :data="fileData"
-                    :show-file-list="false"
+                    :show-file-list="true"
                     :auto-upload="false"
                     ref="upload"
                     :on-success="uploadOk"
@@ -34,7 +38,9 @@
             <Button @click="submitUpload"> 上传</Button>
         </Dialog>
         <div>
-            <Input size="mini"  style="width: 200px" v-model="doAddDir[0]" ><Button size="mini" slot="append"  type="text" @click="addDir(0)">添加顶级目录</Button></Input>
+            <Input size="mini"  style="width: 200px" v-model="doAddDir[0]" >
+                <Button size="mini" slot="append"  type="text" @click="addDir(0)">添加顶级目录</Button>
+            </Input>
         </div>
     </div>
 </template>
@@ -81,7 +87,9 @@
 
 
                 this.$axios.post('/dir/add',c).then(item=>{
-                    console.log(item)
+                    if(item.status==200){
+                            this.$message("添加成功")
+                    }
                 })
 
             },

@@ -57,7 +57,9 @@
                     tel_id:this.selectTel
                 }
                 axios.post("/device/bindTel",d).then(item=>{
-                    console.log(item.data)
+                    if(item.status==200){
+                        this.$message("添加成功，刷新")
+                    }
                 })
 
             }

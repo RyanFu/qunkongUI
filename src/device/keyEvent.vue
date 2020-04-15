@@ -4,7 +4,7 @@
             <TabPane label="按键">
                 <Row>
                     <Col :span="7">
-                        <Input v-model="textValue"  type="text" style="width: 400px;"
+                        <Input v-model="textValue"  size="mini" type="text" style="width: 400px;"
                                @keyup.enter.native="adbAction('am broadcast -a ADB_INPUT_TEXT --es msg  '+ textValue),textValue=''"
                                @keyup.delete.native="adbAction('input keyevent 67')"
                                @keyup.down.native="adbAction('input keyevent 20')"
@@ -12,7 +12,6 @@
                                @keyup.left.native="adbAction('input keyevent 21')"
                                @keyup.right.native="adbAction('input keyevent 22')"
                         >
-
                         </Input>
 
                     </Col>
@@ -22,8 +21,6 @@
                     <Col :span="2">
                         <Button   @click="adbAction(textValue)">shell命令</Button>
                     </Col>
-
-
 
                     <Col :span="4">
                         <Button @click="adbAction( '','tel')" type="danger"> 输入手机号</Button>
@@ -100,7 +97,14 @@
     export default {
         name: "keyEvent",
         components:{
-            Collapse,CollapseItem,Button,ButtonGroup,Input,Row,Col,Dialog,Form,FormItem,Select,Option,e_Switch:Switch,Tabs,TabPane,Popover
+            Collapse,CollapseItem,
+            Button:function () {
+                Button.props.size={
+                    default:"mini"
+                }
+                return Button
+            }(),
+            ButtonGroup,Input,Row,Col,Dialog,Form,FormItem,Select,Option,e_Switch:Switch,Tabs,TabPane,Popover
         },
         data(){
             return{
@@ -128,7 +132,7 @@
                     Backspace:112,
                     b:30
                 }
-                this.adbAction("input keyevent "+c[e.key])
+                this.adbAction(c[e.key],"key")
                 console.log(e)
             },
             addApp(){
