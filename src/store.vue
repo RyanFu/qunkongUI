@@ -42,9 +42,12 @@
                     let item=data[i]
                     item.status=true
                     item.msg=[]
-                    if(item.size!=""){
-                        let w=item.size.split("x",3)
-                        item.style={width:w[0] /4 +'px',height:w[1] /4  +'px',border:"1px solid #409EFF",display:"inline-block",margin:"0 0 5px 5px"}
+                    if(item.edevice.width!=""){
+                        item.style={
+                            width:item.edevice.width /4 +'px',
+                            height:item.edevice.height/4  +'px',
+                            border:"1px solid #409EFF",
+                            display:"inline-block",margin:"0 0 5px 5px"}
                     }
                     sate.SelectDevice.push(item.adbId)
                     sate.AllDevice[item.adbId]=item
