@@ -3,7 +3,6 @@
         <Table :data="tel">
             <TableColumn label="ID" prop="id"></TableColumn>
             <TableColumn label="花名" prop="name"></TableColumn>
-
             <TableColumn label="手机号" prop="context"></TableColumn>
             <TableColumn label="手机adbId" prop="device.adbId"></TableColumn>
             <TableColumn label="操作">
@@ -60,19 +59,25 @@
                 })
             },
             del(i){
-                this.$axios.get("/tel/del/"+i.id).then(item=>{
-                    if(item.status==200){
-                        this.tel.splice(this.tel.indexOf(i),1)
-                        this.$message("操作成功")
-                    }
+                this.$confirm("确定要删除吗").then(()=>{
+                    this.$axios.get("/tel/del/"+i.id).then(item=>{
+                        if(item.status==200){
+                            this.tel.splice(this.tel.indexOf(i),1)
+                            this.$message("操作成功")
+                        }
+                    })
                 })
+
             },
             delDevice(i){
+
                 this.$axios.post("/tel/delDevice",i).then(item=>{
                     if(item.status==200){
                         this.$message("操作成功")
                     }
                 })
+
+
             }
         },
         mounted(){

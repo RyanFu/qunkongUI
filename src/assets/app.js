@@ -8,6 +8,6 @@ module.exports={
     设置:"com.android.settings",
     联系人:"com.android.contacts",
     快手:"com.smile.gifmaker",
-    后台:"com.example.myapplication"
+    后台:"com.ayunti"
 
 }

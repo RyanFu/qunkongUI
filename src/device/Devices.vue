@@ -2,10 +2,13 @@
     <div>
         <div sytle="display:flex">
             <CheckboxGroup v-model="$store.state.SelectDevice">
-            <div v-for="(i,k) in $store.state.AllDevice" :key="i.adbId"  style="display: inline-block">
+            <div v-for="(i,k) in devices" :key="i.adbId"  style="display: inline-block">
                 <div   :style="i.style" style="position: relative;overflow: hidden" >
                     <div style="position: absolute;width: 100%;height: 100%;z-index: 999" :title="i.adbId"  @mousedown="mouseStart" @mouseup="mouseEnd" >
 
+                    </div>
+                    <div style="position: absolute;width: 100%;height: 100%;z-index: 998">
+                        <span style="font-size:16px" v-for="m in i.msg">{{m}}</span>
                     </div>
                     <div style="position: absolute;width: 100%;height: 100%" >
                         <img width="100%" height="100%" :id="i.adbId">
@@ -54,8 +57,14 @@
                     y:"",
                     t:""
                 },
-                screen:{}
+                screen:{},
 
+
+            }
+        },
+        computed:{
+            devices(){
+                return this.$store.state.AllDevice
             }
         },
         created(){
@@ -71,12 +80,19 @@
                     case "screen":
                         this.showScrren(data)
                         break;
+                     case "msg":
+                         this.msg(data)
+                         break
                 }
 
             }
 
         },
         methods:{
+            msg(data){
+                this.$store.commit("addMsg",data.content)
+                console.log(this.devices,data)
+            },
             showScrren(data){
                 data.data="data:image/jpg;base64,"+data.data;
                 this.screen[data.adbId]=data.data
@@ -105,6 +121,9 @@
             },
             mouseStart(e){
                 this.$store.state.DoingDevice=e.target.title
+
+                console.log(e)
+
                 this.xyStart={
                     x:e.offsetX,
                     y:e.offsetY,
@@ -116,11 +135,16 @@
                 let endY=e.offsetY
                 let cmd="";
                 let type="tap";
+                let w=e.target.offsetWidth
+                let h=e.target.offsetHeight
+
                 if(  Math.abs( (endX - this.xyStart.x) )   > 3 ||  Math.abs( (endY- this.xyStart.Y) )>3  || (new Date()).getTime() - this.xyStart.t > 500){
-                    cmd=this.xyStart.x * 4 +" "+this.xyStart.y * 4 + " " +e.offsetX * 4 + " "+e.offsetY * 4 +"   " + ((new Date()).getTime() - this.xyStart.t )
+                    cmd=this.xyStart.x / w +" "+this.xyStart.y /h  + " " +e.offsetX /w + " "+e.offsetY /h +"   " + ((new Date()).getTime() - this.xyStart.t )
                     type="swipe"
                 }else{
-                     cmd=e.offsetX * 4 + " "+e.offsetY * 4
+
+
+                     cmd=e.offsetX /w + " "+e.offsetY /h
                 }
                 let c={
                     cmd,

@@ -3,6 +3,7 @@
     import axios from "axios"
     import Vue from 'vue'
     import Vuex from 'vuex'
+    import Message from "element-ui"
     Vue.use(Vuex)
     export default new Vuex.Store({
         state:{
@@ -24,13 +25,8 @@
             changeFollow(state,bool){
                 state.follow=bool
             },
-            addRunMsg(state,data){
-                for(let i in state.AllDevice){
-                    if(i==data.adbId){
-                        delete data.adbId
-                        state.AllDevice[i].msg.unshift(data.msg)
-                    }
-                }
+            addMsg(state,data){
+                state.AllDevice[data.adbId]['msg'].push(data.content)
             },
             createTask(state,bool){
                 state.isCreateTask=bool
@@ -39,9 +35,10 @@
                 sate.SelectDevice=[]
                 sate.AllDevice={}
                 for(let i in data){
-                    let item=data[i]
+                    let item= data[i];
+
                     item.status=true
-                    item.msg=[]
+                    item.msg=[];
                     if(item.edevice.width!=""){
                         item.style={
                             width:item.edevice.width /4 +'px',
@@ -57,7 +54,6 @@
         },
         actions:{
             adbAction({dispatch,state},data){
-                console.log(data.type)
                 if(state.isCreateTask){
                     let ts={
                         title:"",
@@ -78,6 +74,7 @@
 
                 }
                 if(d.length<1){
+
                     return
                 }
 

@@ -5,6 +5,8 @@ import 'element-ui/lib/theme-chalk/index.css';
 import axios from "axios"
 import router from "./router"
 import Message from "element-ui/packages/message/src/main";
+import El from "element-ui"
+Vue.use(El)
 axios.defaults.baseURL="http://"+process.env.VUE_APP_APIURL+":9991"
 Vue.prototype.$uploadUrl="http://"+process.env.VUE_APP_APIURL+":9991/file/upload"
 Vue.config.productionTip = false

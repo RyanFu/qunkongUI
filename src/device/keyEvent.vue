@@ -4,9 +4,7 @@
             <TabPane label="按键">
                 <Row>
                     <Col :span="7">
-                        <Input v-model="textValue"  size="mini" type="text" style="width: 400px;"
-                               @keyup.enter.native="adbAction('am broadcast -a ADB_INPUT_TEXT --es msg  '+ textValue),textValue=''"
-                               @keyup.delete.native="adbAction('input keyevent 67')"
+                        <Input  type="textarea" v-model="textValue"  size="mini"  style="width: 400px;"
                                @keyup.down.native="adbAction('input keyevent 20')"
                                @keyup.up.native="adbAction('input keyevent 19')"
                                @keyup.left.native="adbAction('input keyevent 21')"
@@ -22,9 +20,11 @@
                         <Button   @click="adbAction(textValue)">shell命令</Button>
                     </Col>
 
-                    <Col :span="4">
+                    <Col :span="6">
                         <Button @click="adbAction( '','tel')" type="danger"> 输入手机号</Button>
                         <Button   @click="adbAction('','name') ">名字</Button>
+                        <Button   @click="adbAction('ime set com.ayunti/.adb')">输入法</Button>
+
 
                     </Col>
 
@@ -115,7 +115,7 @@
                     "1"
                 ],
 
-                sRpath:"",
+                sRpath:"/sdcard/DCIM/Camera/",
                 Rpath:{
                     "图片":"/sdcard/Pictures/",
                     "相册":"/sdcard/DCIM/Camera/"
@@ -193,7 +193,7 @@
                 let c={
                     type:"shell",
 
-                    cmd:" broadcast -a android.intent.action.MEDIA_MOUNTED -d "+this.sRpath,
+                    cmd:"am broadcast -a android.intent.action.MEDIA_MOUNTED -d "+this.sRpath,
                 }
                 this.$store.dispatch("adbAction",c)
             }
