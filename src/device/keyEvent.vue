@@ -1,7 +1,7 @@
 <template>
-    <div>
-        <Tabs>
-            <TabPane label="按键">
+    <div style="font-size:12px">
+        <Collapse>
+            <CollapseItem title="按键">
                 <Row>
                     <Col :span="7">
                         <Input  type="textarea" v-model="textValue"  size="mini"  style="width: 400px;"
@@ -32,21 +32,21 @@
                 <Row>
                     <Button class="item" v-for="(code,k) in keyCode" @click="adbAction(code,'key')">{{k}}</Button>
                 </Row>
-            </TabPane>
-            <TabPane label="app应用">
+            </CollapseItem>
+            <CollapseItem title="app应用">
                     <Button  v-for="(item,k) in appList" class="item"   @click="adbAction( ' monkey -p '+item+' 1','shell') ">{{k}}</Button>
 
-            </TabPane>
+            </CollapseItem>
 
-            <TabPane label="设置">
+            <CollapseItem title="设置">
                 <Row>
                      <Button @click="adbAction('svc wifi enable')">开启wifi </Button>
                      <Button @click="adbAction('svc wifi disable')">关闭wifi </Button>
                      <Button @click="adbAction('svc data enable')">开启流量 </Button>
                      <Button @click="adbAction('svc data disable')">关闭流量 </Button>
                 </Row>
-            </TabPane>
-            <TabPane label="文件">
+            </CollapseItem>
+            <CollapseItem title="文件">
                 <Row>
                     <Col :span="5">
                         <Select v-model="pushMethod">
@@ -82,8 +82,8 @@
                         <Button  @click="deleteFile">删除</Button>
                     </Col>
                 </Row>
-            </TabPane>
-        </Tabs>
+            </CollapseItem>
+        </Collapse>
 
     </div>
 

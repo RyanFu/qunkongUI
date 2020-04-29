@@ -33,18 +33,7 @@
 
                         </MenuItem>
 
-                        <MenuItem>
-                            <ElSwitch v-model="$store.state.follow" active-text="群控" ></ElSwitch>
 
-                        </MenuItem>
-                        <MenuItem>
-                            <Button size="mini" @click="allSelect">全选</Button>
-
-                        </MenuItem>
-                        <MenuItem>
-                            <Button size="mini" @click="$store.state.SelectDevice=[]">全不选</Button>
-
-                        </MenuItem>
                         <MenuItem>
                             <router-link to="/tel">
                                 <Button size="mini"> 管理手机号</Button>
@@ -98,13 +87,7 @@
                     this.$store.commit("setAllDevice",item.data)
                 })
             },
-            allSelect(){
-                this.$store.state.SelectDevice=[]
 
-                for(let k in this.$store.state.AllDevice){
-                    this.$store.state.SelectDevice.push(k)
-                }
-            },
 
 
         },

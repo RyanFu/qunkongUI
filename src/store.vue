@@ -26,7 +26,8 @@
                 state.follow=bool
             },
             addMsg(state,data){
-                state.AllDevice[data.adbId]['msg'].push(data.content)
+                let id=data.adbId
+                state.AllDevice[id].msg.unshift(data.content)
             },
             createTask(state,bool){
                 state.isCreateTask=bool
@@ -34,6 +35,7 @@
             setAllDevice(sate,data){
                 sate.SelectDevice=[]
                 sate.AllDevice={}
+
                 for(let i in data){
                     let item= data[i];
 

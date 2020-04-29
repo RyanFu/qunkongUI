@@ -119,7 +119,6 @@
                 this.$axios.get("/dir/child/"+node.data.id).then(item=>{
                     let data=[]
                     for(let type in item.data){
-                        console.log(type)
                         for(let key in item.data[type]){
                             item.data[type][key]['type']=type
                             if(type=='file'){

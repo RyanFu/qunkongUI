@@ -1,14 +1,25 @@
 <template>
     <div>
+        <div>
+            <e_Switch v-model="log" inactive-text="日志"></e_Switch>
+            <ElSwitch v-model="$store.state.follow" inactive-text="群控" ></ElSwitch>
+
+            <Button size="mini" @click="$store.state.SelectDevice=[]">全不选</Button>
+            <Button size="mini" @click="allSelect">全选</Button>
+
+
+        </div>
         <div sytle="display:flex">
             <CheckboxGroup v-model="$store.state.SelectDevice">
-            <div v-for="(i,k) in devices" :key="i.adbId"  style="display: inline-block">
+            <div v-for="(i,k) in $store.state.AllDevice" :key="i.adbId"  style="display: inline-block">
                 <div   :style="i.style" style="position: relative;overflow: hidden" >
                     <div style="position: absolute;width: 100%;height: 100%;z-index: 999" :title="i.adbId"  @mousedown="mouseStart" @mouseup="mouseEnd" >
 
                     </div>
-                    <div style="position: absolute;width: 100%;height: 100%;z-index: 998">
-                        <span style="font-size:16px" v-for="m in i.msg">{{m}}</span>
+                    <div style="position: absolute;width: 100%;height: 100%;z-index: 998;overflow: hidden;background-color: #fff"  v-show="log">
+                        <div v-for="(m,k) in i.msg" style="font-size:12px" >
+                            {{m}}
+                        </div>
                     </div>
                     <div style="position: absolute;width: 100%;height: 100%" >
                         <img width="100%" height="100%" :id="i.adbId">
@@ -47,6 +58,7 @@
         },
         data(){
             return{
+                log:false,
                 isShow:false,
                 devicesList:[],
                 deviceInfo:{},
@@ -62,36 +74,32 @@
 
             }
         },
-        computed:{
-            devices(){
-                return this.$store.state.AllDevice
-            }
-        },
-        created(){
-            this.$axios.get("/devices/all").then(item=>{
-                if(item.status==200){
-                    this.$store.commit("setAllDevice",item.data)
-                }
-            })
-            this.$socket.message["device"]=(e)=>{
-                let data= JSON.parse(e.data)
 
-                switch(data.type){
-                    case "screen":
-                        this.showScrren(data)
-                        break;
-                     case "msg":
-                         this.msg(data)
-                         break
-                }
+created(){
+    this.$socket.message["device"]=(e)=>{
+        let data= JSON.parse(e.data)
 
-            }
+        switch(data.type){
+            case "screen":
+                this.showScrren(data)
+                break;
+            case "msg":
+                this.msg(data)
+                break
+        }
 
-        },
+    }
+},
         methods:{
+            allSelect(){
+                this.$store.state.SelectDevice=[]
+
+                for(let k in this.$store.state.AllDevice){
+                    this.$store.state.SelectDevice.push(k)
+                }
+            },
             msg(data){
-                this.$store.commit("addMsg",data.content)
-                console.log(this.devices,data)
+                this.$store.commit("addMsg",data)
             },
             showScrren(data){
                 data.data="data:image/jpg;base64,"+data.data;
