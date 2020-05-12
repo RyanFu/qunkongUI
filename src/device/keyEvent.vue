@@ -38,14 +38,14 @@
 
             </CollapseItem>
 
-            <CollapseItem title="设置">
+            <!-- <CollapseItem title="设置">
                 <Row>
                      <Button @click="adbAction('svc wifi enable')">开启wifi </Button>
                      <Button @click="adbAction('svc wifi disable')">关闭wifi </Button>
                      <Button @click="adbAction('svc data enable')">开启流量 </Button>
                      <Button @click="adbAction('svc data disable')">关闭流量 </Button>
                 </Row>
-            </CollapseItem>
+            </CollapseItem> -->
             <CollapseItem title="文件">
                 <Row>
                     <Col :span="5">

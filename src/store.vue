@@ -49,7 +49,7 @@
                             display:"inline-block",margin:"0 0 5px 5px"}
                     }
                     sate.SelectDevice.push(item.adbId)
-                    sate.AllDevice[item.adbId]=item
+                    sate.AllDevice[i]=item
                 }
 
             }

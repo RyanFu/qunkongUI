@@ -9,15 +9,15 @@
                     :expand-on-click-node="false"
                     @check="handleCheckChange"
             >
-            <div class="custom-tree-node" slot-scope="{ node, data }">
-                         <span>{{data.name}}</span>
-                <div v-if="node.data.type=='dir'">
-                      <Input size="mini"  style="width: 200px" v-model="doAddDir[data.id]" >
-                          <Button size="mini" slot="append"  type="text" @click="addDir(data.id)">添加目录</Button>
-                      </Input>
-                        <Button size="mini" type="text" @click="showUpload=true,fileData.dirId=data.id">上传文件</Button>
+                <div class="custom-tree-node" slot-scope="{ node, data }">
+                    <span>{{data.name}}</span>
+                    <div v-if="node.data.type=='dir'">
+                        <Input size="mini"  style="width: 200px" v-model="doAddDir[data.id]" >
+                            <Button size="mini" slot="append"  type="text" @click="addDir(data.id)">添加目录</Button>
+                        </Input>
+                            <Button size="mini" type="text" @click="showUpload=true,fileData.dirId=data.id">上传文件</Button>
+                    </div>
                 </div>
-            </div>
             </Tree>
         </div>
         <Dialog :visible.sync="showUpload">
