@@ -21,7 +21,7 @@
             >
                 <template slot-scope="r">
                     <Input v-model="r.row.count" size="mini" style="width: 80px"></Input>
-                    <Button size="mini" @click="run(r)">执行</Button>
+                    <Button size="mini" @click="run(r)">添加到队列</Button>
                 </template>
             </TableColumn>
             <TableColumn
@@ -33,6 +33,11 @@
                 </template>
             </TableColumn>
         </Table>
+        <div>
+            <Button @click="startAll">开始任务</Button>
+            <Button @click="stopAll">暂停任务</Button>
+            <Button @click="clearAll">清除任务</Button>
+        </div>
         <Pagination :total="total" layout="prev, pager, next, jumper, ->, total" :page-size="size" @current-change="page">
 
         </Pagination>
@@ -77,6 +82,28 @@
                 this.$axios.post("/task/run",d).then(item=>{
                     if(item.status==200){
                         this.$message("任务开始运行")
+                    }
+                })
+            },
+            startAll(){
+                this.$axios.get("/task/startAll").then(item=>{
+                    if(item.status==200){
+                        this.$message("操作成功")
+                    }
+                })
+            },
+                      stopAll(){
+                this.$axios.get("/task/stopAll").then(item=>{
+                    if(item.status==200){
+                        this.$message("操作成功")
+                    }
+                })
+            },
+
+                      clearAll(){
+                this.$axios.get("/task/clearAll").then(item=>{
+                    if(item.status==200){
+                        this.$message("操作成功")
                     }
                 })
             },
