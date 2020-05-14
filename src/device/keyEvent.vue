@@ -46,43 +46,7 @@
                      <Button @click="adbAction('svc data disable')">关闭流量 </Button>
                 </Row>
             </CollapseItem> -->
-            <CollapseItem title="文件">
-                <Row>
-                    <Col :span="5">
-                        <Select v-model="pushMethod">
-                            <Option  value="random" label="随机各一份"></Option>
-                            <Option value="order"  label="顺序"></Option>
-                            <Option value="together"  label=" 都一样"></Option>
-                        </Select>
-                    </Col>
-                    <Col :span="5">
-                        <Select v-model="sRpath">
-                            <Option v-for="(r,k) in Rpath"  :value="r" :label="k"></Option>
-                        </Select>
-                    </Col>
-                    <Col :span="4">
-                        <Button  @click="selectFiles">复制到手机</Button>
-                    </Col>
-                    <Button class="item" @click="addApp">安装应用</Button>
-
-                </Row>
-                <Row>
-                    <Col :span="5">
-                        <Select v-model="sRpath">
-                            <Option v-for="(r,k) in Rpath"  :value="r" :label="k"></Option>
-                        </Select>
-                    </Col>
-                    <Col :span="4">
-                        <Button  @click="createDIR">创建</Button>
-                    </Col>
-                    <Col :span="4">
-                        <Button  @click="restDIR">刷新</Button>
-                    </Col>
-                    <Col :span="4">
-                        <Button  @click="deleteFile">删除</Button>
-                    </Col>
-                </Row>
-            </CollapseItem>
+           
         </Collapse>
 
     </div>
@@ -115,12 +79,7 @@
                     "1"
                 ],
 
-                sRpath:"/sdcard/DCIM/Camera/",
-                Rpath:{
-                    "图片":"/sdcard/Pictures/",
-                    "相册":"/sdcard/DCIM/Camera/"
-                },
-                pushMethod:'together',
+              
                 appList:{},
                 keyCode:{},
 
@@ -135,16 +94,6 @@
                 this.adbAction(c[e.key],"key")
                 console.log(e)
             },
-            addApp(){
-                this.$store.state.SelectFile.map(item=>{
-                    if(item.type=="file"){
-                        this.adbAction(item.dir+item.md5+"."+item.suffix,"install")
-                    }
-
-                })
-
-            },
-
 
             adbAction(cmd,type="shell",other=""){
                 let d={
@@ -154,49 +103,8 @@
                 }
                 this.$store.dispatch("adbAction",d)
             },
-            selectFiles(){
-                let files=[]
-                this.$store.state.SelectFile.map(item=>{
-                    if(item.type=="file"){
 
-                        let url=item.dir+item.md5+"."+item.suffix
-                        files.push(url)
-                    }
-                })
-                let c={
-                    type:"push",
-                    cmd:"",
-                    other:{
-                        Rpath:this.sRpath,
-                        Lpath:files,
-                        pushMethod:this.pushMethod
 
-                    }
-                }
-              this.$store.dispatch("adbAction",c)
-            },
-            deleteFile(){
-                let c={
-                    type:"shell",
-                    cmd:" rm -rf "+this.sRpath +"*",
-                }
-                this.$store.dispatch("adbAction",c)
-            },
-            createDIR(){
-                let c={
-                    type:"shell",
-                    cmd:" mkdir "+this.sRpath,
-                }
-                this.$store.dispatch("adbAction",c)
-            },
-            restDIR(){
-                let c={
-                    type:"shell",
-
-                    cmd:"am broadcast -a android.intent.action.MEDIA_MOUNTED -d "+this.sRpath,
-                }
-                this.$store.dispatch("adbAction",c)
-            }
         },
         mounted(){
             this.appList=appList

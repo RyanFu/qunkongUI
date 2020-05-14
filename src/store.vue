@@ -17,6 +17,7 @@
                 doc:"",
                 tasks:[]
             },
+            log:false,
             isCreateTask:false,
             SelectFile:[]
 
