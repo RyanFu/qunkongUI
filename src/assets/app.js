@@ -8,6 +8,8 @@ module.exports={
     设置:"com.android.settings",
     联系人:"com.android.contacts",
     快手:"com.smile.gifmaker",
+    淘宝:"com.taobao.taobao",
+    百度地图:"com.baidu.BaiduMap",
     后台:"com.ayunti"
 
 }
