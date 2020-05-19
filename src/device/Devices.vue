@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div sytle="display:flex">
+    <div sytle="display:flex;margin-bottom:500px">
       <CheckboxGroup v-model="$store.state.SelectDevice">
         <div v-for="(i,k) in $store.state.AllDevice" :key="i.adbId" style="display: inline-block">
           <div :style="i.style" style="position: relative;overflow: hidden">
@@ -31,7 +31,7 @@
       </CheckboxGroup>
     </div>
     <div style="position:fixed;bottom:0px;width:100%">
-     <KeyEvent></KeyEvent>
+      <KeyEvent></KeyEvent>
     </div>
     <Dialog :visible.sync="showDevice">
       <deviceFrom :device="deviceInfo"></deviceFrom>
