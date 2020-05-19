@@ -30,7 +30,9 @@
         </div>
       </CheckboxGroup>
     </div>
-    <KeyEvent></KeyEvent>
+    <div style="position:fixed;bottom:0px;width:100%">
+     <KeyEvent></KeyEvent>
+    </div>
     <Dialog :visible.sync="showDevice">
       <deviceFrom :device="deviceInfo"></deviceFrom>
     </Dialog>
