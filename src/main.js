@@ -7,8 +7,9 @@ import router from "./router"
 import Message from "element-ui/packages/message/src/main";
 import El from "element-ui"
 Vue.use(El)
-axios.defaults.baseURL="http://"+process.env.VUE_APP_APIURL+":9991"
-Vue.prototype.$uploadUrl="http://"+process.env.VUE_APP_APIURL+":9991/file/upload"
+let host=localStorage.getItem("host")
+axios.defaults.baseURL="http://"+host+":9991"
+Vue.prototype.$uploadUrl="http://"+host+":9991/file/upload"
 Vue.config.productionTip = false
 Vue.prototype.$axios=axios
 Vue.prototype.$socket= {
@@ -21,7 +22,7 @@ Vue.prototype.$socket= {
     close:{},
     int:function () {
       if(this.ws.readyState!=1){
-        this.ws=new WebSocket("ws://"+process.env.VUE_APP_APIURL+":9999/ws")
+        this.ws=new WebSocket("ws://"+host+":9999/ws")
       }
       this.ws.onopen= (e)=>{
           for (let  i in this.open){

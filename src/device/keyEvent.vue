@@ -25,6 +25,7 @@
                         <Button   @click="adbAction('','name') ">名字</Button>
                         <Button   @click="adbAction('ime set com.ayunti/.adb')">输入法</Button>
 
+                         <Input v-model="host" size="mini" @input="onHost()" > <span slot="prepend">ip</span></Input>
 
                     </Col>
 
@@ -72,6 +73,7 @@
         },
         data(){
             return{
+                host:localStorage.getItem("host"),
                 inputCmd:"",
                 dialogForm:false,
                 textValue:"",
@@ -86,6 +88,9 @@
             }
         },
         methods:{
+            onHost(){
+                localStorage.setItem("host",this.host)
+            },
             key(e){
                 let c={
                     Backspace:112,

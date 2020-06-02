@@ -7,6 +7,7 @@
     Vue.use(Vuex)
     export default new Vuex.Store({
         state:{
+            host:"192.168.1.13",
             SelectDevice:[],
             AllDevice:{},
             follow:true,
