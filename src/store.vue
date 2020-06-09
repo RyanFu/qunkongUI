@@ -83,15 +83,14 @@
                 }
 
                let c= {
-
                     devices:d,
-                    cmd:data.cmd,
+                    data:data,
                     doing:state.DoingDevice,
-                    type:data.type,
-                    other:data.other
+                    type:data.type
                 }
-                axios.post("/devices/runAdb",c)
+                axios.post("/devices/shell",c)
             },
+            
         },
         getters:{
 

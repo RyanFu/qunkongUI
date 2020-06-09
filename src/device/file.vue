@@ -62,6 +62,7 @@
         </Col>
         <Button class="item" @click="addApp">安装应用</Button>
       </Row>
+
       <Row>
         <Col :span="5">
           <Select v-model="sRpath" size="mini">
@@ -76,6 +77,20 @@
         </Col>
         <Col :span="4">
           <Button @click="deleteFile">删除</Button>
+        </Col>
+      </Row>
+
+      <Row>
+        <Col :span="5">
+          <Select v-model="pushMethod" size="mini">
+            <Option value="random" label="随机各一份"></Option>
+            <Option value="order" label="顺序"></Option>
+            <Option value="together" label=" 都一样"></Option>
+          </Select>
+        </Col>
+        <Col :span="4">
+          <Button @click="importContacts">导入联系人</Button>
+          <Button @click="delContacts">删除联系人</Button>
         </Col>
       </Row>
     </Footer>
@@ -116,7 +131,8 @@ export default {
       sRpath: "/sdcard/DCIM/Camera/",
       Rpath: {
         图片: "/sdcard/Pictures/",
-        相册: "/sdcard/DCIM/Camera/"
+        相册: "/sdcard/DCIM/Camera/",
+        通讯录:"/sdcard/contacts.vcf "
       },
       showUpload: false,
       fileData: {
@@ -133,6 +149,14 @@ export default {
     };
   },
   methods: {
+        adbAction(cmd,type="shell",other=""){
+        let d={
+            cmd,
+            type,
+            other,
+        }
+        this.$store.dispatch("adbAction",d)
+    },
     uploadOk() {
       this.showUpload = false;
     },
@@ -149,6 +173,10 @@ export default {
         }
       });
     },
+    importContacts(){
+        let shell='am start -t "text/x-vcard" -d "file:///sdcard/contacts.vcf" -a android.intent.action.VIEW com.android.contacts '
+       this.adbAction(shell)
+    },
     selectFiles() {
       let files = [];
       this.$store.state.SelectFile.map(item => {
@@ -158,31 +186,47 @@ export default {
       });
       let c = {
         type: "push",
-        cmd: "",
-        other: {
-          Rpath: this.sRpath,
-          Lpath: files,
+  
+         devices:this.$store.state.SelectDevice,
+         Rpath: this.sRpath,
+         Lpath: files,
           pushMethod: this.pushMethod
-        }
+  
       };
-      this.$store.dispatch("adbAction", c);
+
+      this.$axios.post("/devices/push",c).then((s)=>{
+        if(s.status==200){
+          this.$message("操作成功")
+        }else{
+                this.$message("error")
+        }
+      })
+    },
+    delContacts(){
+        this.$confirm("确认是否删除").then(()=>{
+              let c={
+              type:"shell",
+              cmd:"pm clear com.android.providers.contacts"
+              }
+          this.$store.dispatch("adbAction",c)
+        })
+    
     },
     submitUpload() {
       this.$refs.upload.submit();
     },
-             adbAction(cmd,type="shell",other=""){
-                let d={
-                    cmd,
-                    type,
-                    other,
-                }
-                this.$store.dispatch("adbAction",d)
-            },
+
     addApp() {
+      let d={
+      
+        "devices":this.$store.state.SelectDevice,
+        "appPath":""
+      }
+
       this.$store.state.SelectFile.map(item => {
-          console.log(item)
         if (item.file) {
-          this.adbAction(item.path, "install");
+          d['appPath']=item.file
+          this.$axios.post("/devices/install",d)
         }
       });
     },
