@@ -81,16 +81,9 @@
       </Row>
 
       <Row>
-        <Col :span="5">
-          <Select v-model="pushMethod" size="mini">
-            <Option value="random" label="随机各一份"></Option>
-            <Option value="order" label="顺序"></Option>
-            <Option value="together" label=" 都一样"></Option>
-          </Select>
-        </Col>
         <Col :span="4">
-          <Button @click="importContacts">导入联系人</Button>
-          <Button @click="delContacts">删除联系人</Button>
+          <Button @click="delContacts">删除手机上的联系人</Button>
+		  <Button @click="addContacts">上传联系人</Button>
         </Col>
       </Row>
     </Footer>
@@ -173,10 +166,6 @@ export default {
         }
       });
     },
-    importContacts(){
-        let shell='am start -t "text/x-vcard" -d "file:///sdcard/contacts.vcf" -a android.intent.action.VIEW com.android.contacts '
-       this.adbAction(shell)
-    },
     selectFiles() {
       let files = [];
       this.$store.state.SelectFile.map(item => {
@@ -212,6 +201,18 @@ export default {
         })
     
     },
+	addContacts(){
+			let c={
+				"devices":this.$store.state.SelectDevice
+			}
+			this.$axios.post("/clientAccount/addContacts",c).then((s)=>{
+				if(s.status=='200'){
+					this.$message("执行成功")
+				}
+			})
+	 
+	
+	},
     submitUpload() {
       this.$refs.upload.submit();
     },

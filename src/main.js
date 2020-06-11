@@ -10,6 +10,7 @@ Vue.use(El)
 let host=localStorage.getItem("host")
 axios.defaults.baseURL="http://"+host+":9991"
 Vue.prototype.$uploadUrl="http://"+host+":9991/file/upload"
+Vue.prototype.$clientAccount="http://"+host+":9991/clientAccount/add"
 Vue.config.productionTip = false
 Vue.prototype.$axios=axios
 Vue.prototype.$socket= {

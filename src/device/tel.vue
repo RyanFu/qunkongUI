@@ -1,6 +1,11 @@
 <template>
     <div>
-        <Table :data="tel">
+		<Menu>
+			<router-link to="/clientAccount">
+				<MenuItem >客户手机号</MenuItem>
+			</router-link>
+		</Menu>
+        <Table :data="tel" size=mini>
             <TableColumn label="ID" prop="id"></TableColumn>
             <TableColumn label="花名" prop="name"></TableColumn>
             <TableColumn label="手机号" prop="context"></TableColumn>
@@ -10,28 +15,30 @@
                     <Button @click="edit(r.row)">编辑</Button>
                     <Button @click="delDevice(r.row)">解绑</Button>
                     <Button @click="del(r.row)">删除电话号</Button>
-
                 </template>
             </TableColumn>
         </Table>
-        <Pagination :total="total" layout="next,slot">
+        <Pagination :total="total" layout="prev,next,slot" @current-change="page" :page-size='size'>
             <Button @click="showAdd">添加手机号</Button>
+        
         </Pagination>
     </div>
 </template>
 
 <script>
     import form from './telForm'
-    import {Button,TableColumn,Table,Pagination,MessageBox} from "element-ui"
+    import {Button,TableColumn,Table,Pagination,MessageBox,Menu,MenuItem} from "element-ui"
+	
     export default {
         name: "tel",
         components:{
-            Button,TableColumn,Table,Pagination
+            Button,TableColumn,Table,Pagination,Menu,MenuItem
         },
         data(){
             return{
                 tel:[],
-                total:0
+                total:0,
+				size:20
             }
         },
         methods:{
@@ -40,6 +47,7 @@
                     if(item.status==200){
                         this.tel=item.data.content
                         this.total=item.data.total
+                        this.total=item.data.size
 
                     }
                 })
@@ -70,12 +78,15 @@
 
             },
             delDevice(i){
-
-                this.$axios.post("/tel/delDevice",i).then(item=>{
-                    if(item.status==200){
-                        this.$message("操作成功")
-                    }
-                })
+					
+				this.$confirm("确定解绑？").then(()=>{
+					this.$axios.post("/tel/delDevice",i).then(item=>{
+					    if(item.status==200){
+					        this.$message("操作成功")
+					    }
+					})
+				})
+        
 
 
             }

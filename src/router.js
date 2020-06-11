@@ -27,7 +27,11 @@ const routes=[
             {
                 path: "/tel",
                 component:tel=>import("@/device/tel")
-            }
+            },
+			{
+			    path: "/clientAccount",
+			    component:tel=>import("@/device/clientAccount")
+			}
         ]
     }
 ]
