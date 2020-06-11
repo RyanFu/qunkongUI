@@ -226,7 +226,7 @@ export default {
 
       this.$store.state.SelectFile.map(item => {
         if (item.file) {
-          d['appPath']=item.file
+          d['appPath']=item.path
           this.$axios.post("/devices/install",d)
         }
       });
