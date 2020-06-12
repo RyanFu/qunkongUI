@@ -79,12 +79,14 @@
           <Button @click="deleteFile">删除</Button>
         </Col>
       </Row>
-
       <Row>
         <Col :span="4">
           <Button @click="delContacts">删除手机上的联系人</Button>
-		  <Button @click="addContacts">上传联系人</Button>
+		  
         </Col>
+		<Col :span="4">
+			<Button @click="addContacts">上传联系人</Button>
+		</Col>
       </Row>
     </Footer>
   </div>
@@ -125,7 +127,7 @@ export default {
       Rpath: {
         图片: "/sdcard/Pictures/",
         相册: "/sdcard/DCIM/Camera/",
-        通讯录:"/sdcard/contacts.vcf "
+    
       },
       showUpload: false,
       fileData: {
