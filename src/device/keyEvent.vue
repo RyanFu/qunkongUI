@@ -4,7 +4,7 @@
             <CollapseItem title="按键">
                 <Row>
                     <Col :span="7">
-                        <Input  type="textarea" v-model="textValue"  size="mini"  style="width: 400px;"
+                        <Input  type="textarea" placeholder="以英语 || 分割 支持随机输入;支持 adb shell 命令:如重启手机 输入  'reboot' 点击执行shell命令 " v-model="textValue"  size="mini"  style="width: 400px;"
                                @keyup.down.native="adbAction('input keyevent 20')"
                                @keyup.up.native="adbAction('input keyevent 19')"
                                @keyup.left.native="adbAction('input keyevent 21')"
@@ -25,7 +25,7 @@
                         <Button   @click="adbAction('','name') ">名字</Button>
                         <Button   @click="adbAction('ime set com.ayunti/.adb')">输入法</Button>
 
-                         <Input v-model="host" size="mini" @input="onHost()" > <span slot="prepend">ip</span></Input>
+                         <Input v-model="host" size="mini" @input="onHost()"  placeholder="输入后端ip,刷新页面" > <span slot="prepend">连接ip</span></Input>
 
                     </Col>
 

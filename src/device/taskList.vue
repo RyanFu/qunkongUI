@@ -81,7 +81,7 @@
                 }
                 this.$axios.post("/task/run",d).then(item=>{
                     if(item.status==200){
-                        this.$message("任务开始运行")
+                        this.$message("添加到队列")
                     }
                 })
             },

@@ -8,7 +8,10 @@ const routes=[
         children: [
             {
                 path: "/",
-                component:devices=>import("@/device/Devices")
+                component:devices=>import("@/device/Devices"),
+				meta:{
+					keepAlive:true
+				}
             },
             {
                 path:"/file",

@@ -10,6 +10,6 @@ module.exports={
     快手:"com.smile.gifmaker",
     淘宝:"com.taobao.taobao",
     百度地图:"com.baidu.BaiduMap",
-    后台:"com.ayunti"
+    群控app:"com.ayunti"
 
 }
