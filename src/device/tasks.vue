@@ -18,7 +18,7 @@
                                 <Input v-model="a.context" style="width: 250px;" size="mini"><span slot="prepend">执行内容</span></Input>
                                 <Input v-model="a.sleep" style="width: 150px;" size="mini"><span slot="prepend">延迟执行</span></Input>
                                 <e_Switch v-model="a.random" inactive-text="随机"></e_Switch>
-                                <Input v-model="a.sort" style="width: 150px;" size="mini"><span slot="prepend">排序</span></Input>
+                                <!-- <Input v-model="a.sort" style="width: 150px;" size="mini"><span slot="prepend">排序</span></Input> -->
                                 <Tag @click="$store.state.task.tasks.splice(k,1)" size="mini">x</Tag>
                             </div>
                         </span>

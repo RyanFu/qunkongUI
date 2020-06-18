@@ -9,7 +9,7 @@
 			<TableColumn prop="content" label="内容"></TableColumn>
 			<TableColumn  label="所属号">
 				<template slot-scope="r">
-					<span v-if="r.row.eTel">{{r.row.eTel.context}}</span>
+					<span v-if="r.row.etel">{{r.row.etel.context}}</span>
 				</template>
 			</TableColumn>
 			<TableColumn prop="accountType" label="类型"></TableColumn>
