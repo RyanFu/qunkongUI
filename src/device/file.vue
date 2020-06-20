@@ -80,10 +80,6 @@
         </Col>
       </Row>
       <Row>
-        <Col :span="4">
-          <Button @click="delContacts">删除手机上的联系人</Button>
-		  
-        </Col>
 		<Col :span="4">
 			<Button @click="addContacts">上传联系人</Button>
 		</Col>
@@ -181,7 +177,7 @@ export default {
          devices:this.$store.state.SelectDevice,
          Rpath: this.sRpath,
          Lpath: files,
-          pushMethod: this.pushMethod
+         pushMethod: this.pushMethod
   
       };
 
@@ -237,7 +233,7 @@ export default {
     lodeNode(node, call) {
       let url = "/dir";
       if (node.level > 0) {
-        url = url + "?path=" + node.data.path;
+        url = url + "?path=" + encodeURIComponent(node.data.path);
       }
       this.$axios.get(url).then(item => {
         call(item.data);
