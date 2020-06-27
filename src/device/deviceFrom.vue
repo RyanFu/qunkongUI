@@ -3,15 +3,14 @@
         <FormItem label="adbId:">
             <span>{{device.adbId}}</span>
         </FormItem>
-
         <FormItem label="手机号">
             <Row v-for="i in device.edevice.tel">
                 <span>{{i.name}}</span>
                 <span>:-----:</span>
-                <span>                {{i.context}}</span>
+                <span>{{i.context}}</span>
             </Row>
-            <Select v-model="selectTel">
-                <Option v-for="tel in notBindTel" :value="tel.id" :key="tel.id" :label="tel.context"></Option>
+            <Select v-model="selectTel"     @focus="notBind">
+                <Option v-for="tel in notBindTel" :value="tel.id" :key="tel.id" :label="tel.context"> <span style="color: #3a8ee6">{{tel.name}}:</span>{{tel.context}}</Option>
             </Select>
             <Button @click="bindTel">绑定</Button>
         </FormItem>
@@ -62,14 +61,14 @@
                     }
                 })
 
+            },
+            notBind(){
+                axios.get("/tel/notBind").then(item=>{
+                    this.notBindTel=item.data
+                }).catch(()=>{})
             }
         },
-        created(){
-            axios.get("/tel/notBind").then(item=>{
-                this.notBindTel=item.data
-                console.log(item)
-            })
-        }
+
     }
 </script>
 

@@ -1,5 +1,6 @@
 module.exports={
     QQ:"com.tencent.mobileqq",
+    知乎:"com.zhihu.android",
     微信:"com.tencent.mm",
     新浪微博:"com.sina.weibo",
     陌陌:"com.immomo.momo",
@@ -10,6 +11,7 @@ module.exports={
     快手:"com.smile.gifmaker",
     淘宝:"com.taobao.taobao",
     百度地图:"com.baidu.BaiduMap",
+    短信:"com.android.smspush",
     群控app:"com.ayunti"
 
 }

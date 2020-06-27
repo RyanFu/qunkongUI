@@ -33,9 +33,7 @@
     <div style="position:fixed;bottom:0px;width:100%;z-index:999">
       <KeyEvent></KeyEvent>
     </div>
-    <Dialog :visible.sync="showDevice">
-      <deviceFrom :device="deviceInfo"></deviceFrom>
-    </Dialog>
+
   </div>
 </template>
 
@@ -61,7 +59,8 @@ import {
   Col,
   Dialog,
   CheckboxGroup,
-  Checkbox
+  Checkbox,
+        MessageBox
 } from "element-ui";
 export default {
   name: "Devices",
@@ -82,7 +81,6 @@ export default {
     Col,
     Row,
     Dialog,
-    deviceFrom,
     CheckboxGroup,
     Checkbox
   },
@@ -90,9 +88,7 @@ export default {
     return {
       isShow: false,
       devicesList: [],
-      deviceInfo: {},
       isCollapse: false,
-      showDevice: false,
       xyStart: {
         x: "",
         y: "",
@@ -113,6 +109,9 @@ export default {
         case "msg":
           this.msg(data);
           break;
+        case "device":
+
+          break;
       }
     };
   },
@@ -130,7 +129,7 @@ export default {
     },
 
     close() {
-      isShow = false;
+      this.isShow = false;
     },
     remove(device) {
       let th = this;
@@ -188,8 +187,12 @@ export default {
       this.$store.dispatch("adbAction", c);
     },
     goTodevice(device) {
-      this.showDevice = true;
-      this.deviceInfo = device;
+      new MessageBox({
+        title:"绑定信息",
+        showConfirmButton:false,
+        message:this.$createElement(deviceFrom,{props:{device}})
+      })
+
     }
   }
 };
